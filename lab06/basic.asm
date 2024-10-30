@@ -1,5 +1,7 @@
-List p=18f4520
-#include<pic18f4520.inc>
+LIST p=18f4520
+#include<p18f4520.inc>
+
+
 
 
     CONFIG OSC = INTIO67 ; Set internal oscillator to 1 MHz
@@ -62,28 +64,28 @@ check_process:
     BRA check_first         ; If button is pressed, branch to lightup
     
 check_first:
-    BTFSC LATA, 0
+    BTFSS LATA, 0
     BRA check_second    ; first not lighted
-    BTG LATA, 0         ; first = !first
-    BTG LATA, 1		; second = !second
+    BCF LATA, 0         ; first = !first
+    BSF LATA, 1		; second = !second
     BRA lightup
 
     
 check_second:
-    BTFSC LATA, 1
+    BTFSS LATA, 1
     BRA check_third     ; first & second not lighted
-    BTG LATA, 1         ; second = !second
-    BTG LATA, 2		; third = !third
+    BCF LATA, 1         ; second = !second
+    BSF LATA, 2		; third = !third
     BRA lightup
     
 check_third:
-    BTFSC LATA, 2
+    BTFSS LATA, 2
     BRA toggle_first    ; first & second & third not lighted
-    BTG LATA, 2		; third = !third
+    BCF LATA, 2		; third = !third
     BRA lightup
     
 toggle_first:
-    BTG LATA, 0
+    BSF LATA, 0
     BRA lightup
     
     
