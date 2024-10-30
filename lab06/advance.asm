@@ -1,5 +1,5 @@
-List p=18f4520
-#include<pic18f4520.inc>
+LIST p=18f4520
+#include<p18f4520.inc>
 
 
     CONFIG OSC = INTIO67 ; Set internal oscillator to 1 MHz
@@ -54,9 +54,12 @@ int:
     BSF TRISB, 0        ; Set RB0 as input (TRISB = 0000 0001)
     CLRF LATA           ; Clear LATA
     BCF TRISA, 0        ; Set RA0 as output (TRISA = 0000 0000)
+    BCF TRISA, 1
+    BCF TRISA, 2
     
 ; Button check
 state_0:
+    DELAY d'111', d'70' ; 0.25 sec
     RCALL check_button
     DELAY d'111', d'70' ; 0.25 sec
     BRA state_0
@@ -64,21 +67,46 @@ state_0:
     
 state_1:
     DELAY d'111', d'70' ; 0.25 sec
+    INCF cur_state
+    
+    BSF LATA, 0
+    
+    DELAY d'111', d'70' ; 0.25 sec
     RCALL check_button
-    DELAY d'111', d'140' ; 0.5 sec
+    DELAY d'111', d'70' ; 0.25 sec
+    RCALL check_button
+    DELAY d'111', d'70' ; 0.25 sec
+    RCALL check_button
+    
+    BCF LATA, 0
     BRA state_2
     
     
 state_2:
+    INCF cur_state
+    BSF LATA, 1
     DELAY d'111', d'70' ; 0.25 sec
     RCALL check_button
-    DELAY d'111', d'140' ; 0.5 sec
+    DELAY d'111', d'70' ; 0.25 sec
+    RCALL check_button
+    DELAY d'111', d'70' ; 0.25 sec
+    RCALL check_button
+    
+    BCF LATA, 1
     BRA state_3
     
 state_3:
+    INCF cur_state
+    BSF LATA, 2
     DELAY d'111', d'70' ; 0.25 sec
     RCALL check_button
-    DELAY d'111', d'140' ; 0.5 sec
+    DELAY d'111', d'70' ; 0.25 sec
+    RCALL check_button
+    DELAY d'111', d'70' ; 0.25 sec
+    RCALL check_button
+    
+    CLRF cur_state
+    BCF LATA, 2
     BRA state_1
 
 check_button:
@@ -94,11 +122,11 @@ button_click:
 
     
 reset_all:
+    
     CLRF LATA
     CLRF cur_state
     BRA state_0
     
 end
-
 
 
